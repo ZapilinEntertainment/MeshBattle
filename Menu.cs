@@ -39,6 +39,7 @@ public class Menu : NetworkBehaviour {
 		nm=GameObject.Find("networkManager").GetComponent<NetworkManager>();
 		if (PlayerPrefs.HasKey("campaign_mission")) {Global.campaign_mission=(byte)PlayerPrefs.GetInt("campaign_mission");}
 		else {PlayerPrefs.SetInt("campaign_mission",0);Global.campaign_mission=0;} 
+		Global.campaign_mission=3;
 
 		if (PlayerPrefs.HasKey("gui_piece")) {Global.gui_piece=PlayerPrefs.GetInt("gui_piece");}
 		else {
@@ -89,14 +90,19 @@ public class Menu : NetworkBehaviour {
 			Rect mr=new Rect(ogsw-4*g,3*g,4*g,g);
 			if (GUI.Button(mr,"Сюжет")) {window=1;} mr.y+=g;
 			if (GUI.Button(mr,"Схватка")) {window=2;}mr.y+=g;
-			if (GUI.Button(mr,"По сети")) {window=3;
-				if (PlayerPrefs.HasKey("last_conn_info")) {
+			if (GUI.Button(mr,"По сети")) 
+			{
+				window=3;
+				if (PlayerPrefs.HasKey("last_conn_info")) 
+				{
 					string ci=PlayerPrefs.GetString("last_conn_info");
-					if (ci.Length>8) {
-						if (int.TryParse(ci.Substring(ci.Length-5,5),out port)) {
-						port=int.Parse(ci.Substring(ci.Length-5,5));} else port=4444;
-						port_s=ci.Substring(ci.Length-5,5);
-						ip=ci.Substring(0,ci.Length-6);
+					if (ci.Length>8) 
+					{
+						int pi=ci.IndexOf("|");
+						if (int.TryParse(ci.Substring(pi,ci.Length-pi),out port)) port=int.Parse(ci.Substring(pi+1,ci.Length-pi-1));
+						else port=4444;
+						port_s=ci.Substring(pi+1,ci.Length-pi-1);
+						ip=ci.Substring(0,pi);
 					}
 				}}mr.y+=g;
 			if (GUI.Button(mr,"Customizer")) {Application.LoadLevel("custom");}mr.y+=g;
@@ -105,7 +111,7 @@ public class Menu : NetworkBehaviour {
 			break;
 		case 1:
 			GUI.Box(new Rect(ogsw-4*g,3*g,4*g,5*g),"");
-				for (byte i=1;i<=10;i++) {
+			for (byte i=1;i<=Global.campaign_mission;i++) {
 					if (i<6) {
 						if (GUI.Button(new Rect(ogsw-4*g,(2+i)*g,2*g,g),i.ToString())) {LookMission(i);}
 					}
@@ -131,7 +137,8 @@ public class Menu : NetworkBehaviour {
 			GUI.Label(nr,"port"); nr.y+=g/2;
 			port_s=GUI.TextField(nr,port_s); nr.y-=1.5f*g; nr.x+=5*g;nr.height=g;
 
-			if (GUI.Button(nr,"Host")) {
+			if (GUI.Button(nr,"Host")) 
+			{
 				if (nm.networkAddress!=ip) {nm.networkAddress=ip;}          
 				port=int.Parse(port_s);
 				if (nm.networkPort!=port) {nm.networkPort=port;port_s=port.ToString();}
@@ -141,7 +148,8 @@ public class Menu : NetworkBehaviour {
 				nm.onlineScene="stratophor";
 				nm.StartHost();	
 				Destroy(gameObject);
-			} nr.y+=g;
+			} 
+			nr.y+=g;
 			if (GUI.Button(nr,"Connect")) {
 				if (nm.networkAddress!=ip) {nm.networkAddress=ip;}          
 				port=int.Parse(port_s);
