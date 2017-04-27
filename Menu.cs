@@ -20,7 +20,7 @@ public class Menu : NetworkBehaviour {
 
 	string ip="127.0.0.1";
 	int port=21025;
-	string port_s;
+	string port_s = "21025";
 
 	Texture xsun_tx;
 	Texture menu_back_tx;
@@ -100,7 +100,7 @@ public class Menu : NetworkBehaviour {
 					{
 						int pi=ci.IndexOf("|");
 						if (int.TryParse(ci.Substring(pi,ci.Length-pi),out port)) port=int.Parse(ci.Substring(pi+1,ci.Length-pi-1));
-						else port=4444;
+						else port=21025;
 						port_s=ci.Substring(pi+1,ci.Length-pi-1);
 						ip=ci.Substring(0,pi);
 					}
@@ -131,11 +131,12 @@ public class Menu : NetworkBehaviour {
 				GUI.skin=menu_skin;
 				GUI.skin.GetStyle("Button").fontSize=4*g/10;
 				Rect nr=new Rect(ogsw/2-5*g,4*g,5*g,g/2);		  
+
 			GUI.Label(nr,"ip"); nr.y+=g/2;
-			ip=GUI.TextField(nr,ip); nr.y+=g/2;
+			ip = GUI.TextField(nr, ip); nr.y+=g/2;
 
 			GUI.Label(nr,"port"); nr.y+=g/2;
-			port_s=GUI.TextField(nr,port_s); nr.y-=1.5f*g; nr.x+=5*g;nr.height=g;
+			port_s = GUI.TextField(nr, port_s); nr.y-=1.5f*g; nr.x+=5*g; nr.height=g;
 
 			if (GUI.Button(nr,"Host")) 
 			{

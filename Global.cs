@@ -15,4 +15,5 @@ public static class Global {
 	public static byte cam_rot_speed=70;
 	public static byte cam_zoom_speed=50;
 
+	public static PoolMaster pool;
 }
