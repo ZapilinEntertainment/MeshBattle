@@ -14,7 +14,7 @@ public class PoolMaster : MonoBehaviour
 
 	void Awake() 
 	{
-		Global.pool = this;
+		GameMaster.pool = this;
 		explosionEmitter = Instantiate (explosionPrefab) as ParticleSystem;
 	}
 

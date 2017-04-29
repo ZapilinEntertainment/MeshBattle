@@ -7,12 +7,12 @@ public class Unit : Destructible {
 	public float MOVEMENT_ANGLE_LIMIT;
 	public float ANGLE_THRESHOLD;
 
-	public float speed;
-	public float acceleration;
-	float speedGoal;
-	public float maxSpeed;
-	public float rotationSpeed;
-	public float contactRadius;
+	public float speed = 0;
+	public float acceleration = 0.5f;
+	public float speedGoal = 0;
+	public float maxSpeed = 10;
+	public float rotationSpeed = 25;
+	protected float contactRadius;
 	Vector3 raycastPoint;
 
 	Quaternion rotateTo;
@@ -22,12 +22,13 @@ public class Unit : Destructible {
 	{
 		if (mainCollider == null) mainCollider = GetComponent<BoxCollider>();
 		raycastPoint = new Vector3(0, mainCollider.center.y, mainCollider.center.z + mainCollider.size.z/2);
+		contactRadius = mainCollider.size.magnitude * 2;
 		if (myOrder == null) myOrder = new Order(OrderType.Stand);
 	}
 
 	void Update ()
 	{
-		if (Global.pause) return;
+		if (GameMaster.pause) return;
 
 		float t = Time.deltaTime;
 

@@ -21,7 +21,6 @@ public class Destructible : MonoBehaviour {
 	bool pooling;
 
 	public float setHp;
-	public float setMass;
 
 	public Destructible () 
 	{
@@ -45,13 +44,15 @@ public class Destructible : MonoBehaviour {
 	void Awake () 
 	{
 		if (mainCollider == null) mainCollider = GetComponent<BoxCollider>();
+		physicsMass = mainCollider.size.magnitude;
 		maxHp = setHp;
 		hp = maxHp;
-		physicsMass = setMass;
 	}
 
 	void Update () 
 	{
+		if (GameMaster.pause) return;
+
 		PhysicCalculation (Time.deltaTime);
 	}
 
@@ -84,7 +85,7 @@ public class Destructible : MonoBehaviour {
 		float damage_coefficient = 1 - (hitVector.normalized + Vector3.forward).magnitude/2.0f;
 		float damage = (hitVector.magnitude - physicsMass) * damage_coefficient;
 		print(damage);
-		ApplyDamage(new Damage(damage, armor*10));
+		ApplyDamage(new Damage(damage, armor*10, hitPos));
 		physicsMoveVector += 2*hitVector;
 		physicsRotateVector += 2* (hitPos - transform.position+Random.onUnitSphere);
 	}
@@ -121,7 +122,7 @@ public class Destructible : MonoBehaviour {
 	{
 		if (destroyed) return; else destroyed=true;
 		if (myRenderers) myRenderers.SetActive(false);
-		if (mainCollider != null) Global.pool.DestructionAt (mainCollider);
+		if (mainCollider != null) GameMaster.pool.DestructionAt (mainCollider);
 		if (!pooling) Destroy(gameObject); else gameObject.SetActive(false);
 	}
 
